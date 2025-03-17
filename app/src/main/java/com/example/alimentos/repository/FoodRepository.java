@@ -33,6 +33,6 @@ public class FoodRepository {
     }
 
     public List<FoodEntity> getList(){
-        return new ArrayList<FoodEntity>();
+        return foodList;
     }
 }

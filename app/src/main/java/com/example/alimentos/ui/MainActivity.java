@@ -1,5 +1,6 @@
 package com.example.alimentos.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -10,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.alimentos.OnListClick;
 import com.example.alimentos.R;
 import com.example.alimentos.adapter.FoodAdapter;
 import com.example.alimentos.business.FoodBusiness;
@@ -37,8 +39,17 @@ public class MainActivity extends AppCompatActivity {
         // Passos para a Recycler View
         // 1 - Obter a RecyclerView
         this.viewHolder.recyclerView = findViewById(R.id.recycler_food);
+
+        OnListClick foodListener = new OnListClick() {
+            @Override
+            public void onClick(int id) {
+                Intent intet = new Intent(getApplicationContext(), DetailsActivity.class);
+                startActivity(intet);
+            }
+        };
+
         // 2 - Definir um Adapter
-        FoodAdapter adapter = new FoodAdapter(foodList);
+        FoodAdapter adapter = new FoodAdapter(foodList, foodListener);
         this.viewHolder.recyclerView.setAdapter(adapter);
         // 3 - Definir um layout
         this.viewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(this));
