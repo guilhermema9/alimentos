@@ -43,8 +43,11 @@ public class MainActivity extends AppCompatActivity {
         OnListClick foodListener = new OnListClick() {
             @Override
             public void onClick(int id) {
-                Intent intet = new Intent(getApplicationContext(), DetailsActivity.class);
-                startActivity(intet);
+                Bundle bundle = new Bundle();
+                bundle.putInt("foodId", id);
+                Intent intent = new Intent(getApplicationContext(), DetailsActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         };
 
