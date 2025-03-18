@@ -12,8 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.alimentos.R;
-import com.example.alimentos.business.FoodBusiness;
-import com.example.alimentos.entity.FoodEntity;
+import com.example.alimentos.services.business.FoodBusiness;
+import com.example.alimentos.entities.FoodEntity;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -38,6 +38,9 @@ public class DetailsActivity extends AppCompatActivity {
         // Mapeamento de elementos de interface
         this.viewHolder.textName = findViewById(R.id.text_name);
         this.viewHolder.textCalories = findViewById(R.id.text_calories);
+        this.viewHolder.texQuantity = findViewById(R.id.text_quantity);
+        this.viewHolder.textUnit = findViewById(R.id.text_unit);
+        this.viewHolder.textDescription = findViewById(R.id.text_description);
 
         this.getData();
     }
@@ -56,12 +59,20 @@ public class DetailsActivity extends AppCompatActivity {
             int id = bundle.getInt("foodId");
             FoodEntity foodEntity = new FoodBusiness().getItem(id);
             this.viewHolder.textName.setText(foodEntity.getName());
-            this.viewHolder.textCalories.setText(String.valueOf(foodEntity.getCalories()));
+            this.viewHolder.texQuantity.setText(String.valueOf(foodEntity.getQuantity()));
+            this.viewHolder.textUnit.setText(foodEntity.getUnit());
+            this.viewHolder.textCalories.setText(String.valueOf(foodEntity.getCalories())+" calorias");
+            if(!foodEntity.getDescription().isEmpty()){
+                this.viewHolder.textDescription.setText(foodEntity.getDescription());
+            }
         }
     }
 
     private static class ViewHolder{
         TextView textName;
         TextView textCalories;
+        TextView texQuantity;
+        TextView textUnit;
+        TextView textDescription;
     }
 }

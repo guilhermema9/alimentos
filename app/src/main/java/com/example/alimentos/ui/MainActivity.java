@@ -2,8 +2,12 @@ package com.example.alimentos.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -11,17 +15,20 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.alimentos.OnListClick;
+import com.example.alimentos.services.listener.OnListClick;
 import com.example.alimentos.R;
-import com.example.alimentos.adapter.FoodAdapter;
-import com.example.alimentos.business.FoodBusiness;
-import com.example.alimentos.entity.FoodEntity;
+import com.example.alimentos.ui.adapter.FoodAdapter;
+import com.example.alimentos.services.business.FoodBusiness;
+import com.example.alimentos.entities.FoodEntity;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private ViewHolder viewHolder = new ViewHolder();
+    private FoodBusiness foodBusiness = new FoodBusiness();
+    private OnListClick foodListener;
+    private int filter=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +41,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        List<FoodEntity> foodList = new FoodBusiness().getList();
-
-        // Passos para a Recycler View
-        // 1 - Obter a RecyclerView
-        this.viewHolder.recyclerView = findViewById(R.id.recycler_food);
-
-        OnListClick foodListener = new OnListClick() {
+        this.foodListener = new OnListClick() {
             @Override
             public void onClick(int id) {
                 Bundle bundle = new Bundle();
@@ -51,11 +52,37 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        // 2 - Definir um Adapter
-        FoodAdapter adapter = new FoodAdapter(foodList, foodListener);
-        this.viewHolder.recyclerView.setAdapter(adapter);
-        // 3 - Definir um layout
+        this.viewHolder.recyclerView = findViewById(R.id.recycler_food);
         this.viewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        this.listFood();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        item.setChecked(true);
+        if (item.getItemId() == R.id.filter_low) {
+            this.filter = 1;
+        } else if (item.getItemId() == R.id.filter_medium) {
+            this.filter = 2;
+        } else {
+            this.filter = 3;
+        }
+        this.listFood();
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void listFood(){
+        List<FoodEntity> foodList = this.foodBusiness.getList(this.filter);
+        FoodAdapter adapter = new FoodAdapter(foodList, this.foodListener);
+        this.viewHolder.recyclerView.setAdapter(adapter);
     }
 
     private static class ViewHolder {
